@@ -50,7 +50,7 @@
 	. = ..()
 	if(iscarbon(target))
 		var/mob/living/carbon/M = target
-		M.IgniteMob()
+		M.ignite_mob()
 	else if(isturf(target))
 		impact_effect_type = /obj/effect/temp_visual/impact_effect/red_laser/wall
 
@@ -98,6 +98,9 @@
 	muzzle_type = /obj/effect/projectile/muzzle/disabler
 	impact_type = /obj/effect/projectile/impact/disabler
 
+/obj/projectile/beam/disabler/weak
+	damage = 15
+
 /obj/projectile/beam/pulse
 	name = "pulse"
 	icon_state = "u_laser"
@@ -111,7 +114,7 @@
 
 /obj/projectile/beam/pulse/on_hit(atom/target, blocked = FALSE)
 	. = ..()
-	if (!QDELETED(target) && (isturf(target) || istype(target, /obj/structure/)))
+	if (!QDELETED(target) && (isturf(target) || isstructure(target)))
 		if(isobj(target))
 			SSexplosions.med_mov_atom += target
 		else
@@ -214,6 +217,6 @@
 
 /obj/projectile/beam/shrink/on_hit(atom/target, blocked = FALSE)
 	. = ..()
-	if(isopenturf(target) || istype(target, /turf/closed/indestructible))//shrunk floors wouldnt do anything except look weird, i-walls shouldn't be bypassable
+	if(isopenturf(target) || isindestructiblewall(target))//shrunk floors wouldnt do anything except look weird, i-walls shouldn't be bypassable
 		return
 	target.AddComponent(/datum/component/shrink, shrink_time)
